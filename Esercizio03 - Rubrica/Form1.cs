@@ -8,7 +8,6 @@ namespace Esercizio03___Rubrica
 {
     public partial class Form1 : Form
     {
-        // Percorso del file XML - potrebbe essere passato come parametro o impostato dinamicamente
         private string GetXmlFilePath()
         {
             // Se desideri impostare un percorso fisso puoi scriverlo qui, ad esempio: 
@@ -52,7 +51,6 @@ namespace Esercizio03___Rubrica
                 listBoxContatti.DataSource = contatti;
                 listBoxContatti.DisplayMember = "NomeCompleto";  // Mostra Nome e Cognome
                 listBoxContatti.ValueMember = "Email";  // Mantiene l'email come valore selezionato
-
             }
             catch (Exception ex)
             {
@@ -60,7 +58,6 @@ namespace Esercizio03___Rubrica
             }
         }
 
-        // Metodo migliorato per la validazione dell'email
         private bool emailValida(string email)
         {
             try
@@ -120,19 +117,18 @@ namespace Esercizio03___Rubrica
 
                 // Ricarica i contatti per aggiornare la visualizzazione
                 CaricaContatti();
+
+                // Svuota i campi dopo aver aggiunto un contatto
+                txtCognome.Text = "";
+                txtNome.Text = "";
+                txtIndirizzo.Text = "";
+                txtEmail.Text = "";
+                txtTelefono.Text = "";
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Errore nell'aggiunta del contatto: " + ex.Message);
             }
-
-            //svuota i campi dopo aver aggiunto un contatto
-
-            txtCognome.Text = "";
-            txtNome.Text = "";
-            txtIndirizzo.Text = "";
-            txtEmail.Text = "";
-            txtTelefono.Text = "";
         }
 
         private void listBoxContatti_SelectedIndexChanged(object sender, EventArgs e)
@@ -180,8 +176,6 @@ namespace Esercizio03___Rubrica
             Button btnSalvaModifiche = new Button { Text = "Salva", Left = 100, Top = 100, Width = 100 };
             btnSalvaModifiche.Click += new EventHandler(SalvaModificheContatto);
 
-            //aggiungere un pulsante che mi permetta
-
             // Aggiungi i controlli al GroupBox
             groupBoxModifica.Controls.Add(lblEmail);
             groupBoxModifica.Controls.Add(txtModificaEmail);
@@ -199,8 +193,6 @@ namespace Esercizio03___Rubrica
                 CaricaDatiContattoSelezionato(selectedContact);
             }
         }
-
-
 
         private void CaricaDatiContattoSelezionato(dynamic contatto)
         {
@@ -330,8 +322,7 @@ namespace Esercizio03___Rubrica
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            // apre una nuova finestra dove sono indicate le istruzioni per l'uso del programma
-
+            // Apre una nuova finestra dove sono indicate le istruzioni per l'uso del programma
             MessageBox.Show("Benvenuto nella rubrica!\n\nPer aggiungere un contatto, compila tutti i campi e clicca su 'Aggiungi Contatto'.\n\nPer modificare un contatto, selezionalo dalla lista e clicca su 'Modifica Contatto'.\n\nPer eliminare un contatto, selezionalo dalla lista e clicca su 'Elimina Contatto'.\n\nPer cercare un contatto, clicca su 'Cerca Contatto' e inserisci il nome o l'email del contatto da cercare.\n\nBuon utilizzo!", "Istruzioni");
         }
 
@@ -372,7 +363,5 @@ namespace Esercizio03___Rubrica
                 MessageBox.Show("Errore durante il salvataggio: " + ex.Message);
             }
         }
-
-
     }
 }
