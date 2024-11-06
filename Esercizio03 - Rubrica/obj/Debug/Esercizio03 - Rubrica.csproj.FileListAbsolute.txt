@@ -1,0 +1,10 @@
+C:\Users\luzip\Documents\Visuale\Esercizio03 - Rubrica\Esercizio03 - Rubrica\bin\Debug\Esercizio03 - Rubrica.exe.config
+C:\Users\luzip\Documents\Visuale\Esercizio03 - Rubrica\Esercizio03 - Rubrica\bin\Debug\Esercizio03 - Rubrica.exe
+C:\Users\luzip\Documents\Visuale\Esercizio03 - Rubrica\Esercizio03 - Rubrica\bin\Debug\Esercizio03 - Rubrica.pdb
+C:\Users\luzip\Documents\Visuale\Esercizio03 - Rubrica\Esercizio03 - Rubrica\obj\Debug\Esercizio03 - Rubrica.csproj.AssemblyReference.cache
+C:\Users\luzip\Documents\Visuale\Esercizio03 - Rubrica\Esercizio03 - Rubrica\obj\Debug\Esercizio03___Rubrica.Form1.resources
+C:\Users\luzip\Documents\Visuale\Esercizio03 - Rubrica\Esercizio03 - Rubrica\obj\Debug\Esercizio03___Rubrica.Properties.Resources.resources
+C:\Users\luzip\Documents\Visuale\Esercizio03 - Rubrica\Esercizio03 - Rubrica\obj\Debug\Esercizio03 - Rubrica.csproj.GenerateResource.cache
+C:\Users\luzip\Documents\Visuale\Esercizio03 - Rubrica\Esercizio03 - Rubrica\obj\Debug\Esercizio03 - Rubrica.csproj.CoreCompileInputs.cache
+C:\Users\luzip\Documents\Visuale\Esercizio03 - Rubrica\Esercizio03 - Rubrica\obj\Debug\Esercizio03 - Rubrica.exe
+C:\Users\luzip\Documents\Visuale\Esercizio03 - Rubrica\Esercizio03 - Rubrica\obj\Debug\Esercizio03 - Rubrica.pdb
