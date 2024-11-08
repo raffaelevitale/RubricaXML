@@ -160,15 +160,50 @@ namespace Esercizio03___Rubrica
             var selectedContact = (dynamic)listBoxContatti.SelectedItem;
             if (selectedContact != null)
                 CaricaDatiContattoSelezionato(selectedContact);
+        }
+
+        private void SalvaModificheContatto(object sender, EventArgs e)
+        {
+            SalvaContattoSuFile();
 
             Timer timer = new Timer();
             timer.Interval = 3000;
             timer.Tick += (s, ev) =>
             {
-                this.Controls.Remove(groupBoxModifica);
+                var groupBoxModifica = this.Controls.OfType<GroupBox>()
+                    .FirstOrDefault(gb => gb.Text == "Modifica Contatto");
+                if (groupBoxModifica != null)
+                    this.Controls.Remove(groupBoxModifica);
                 timer.Stop();
             };
             timer.Start();
+        }
+
+        private void SalvaContattoSuFile()
+        {
+            string xmlFilePath = GetXmlFilePath();
+
+            try
+            {
+                XDocument doc = XDocument.Load(xmlFilePath);
+
+                var contattoDaModificare = doc.Descendants("Contatto")
+                    .Where(x => x.Element("Email")?.Value == txtModificaEmail.Text)
+                    .FirstOrDefault();
+
+                if (contattoDaModificare != null)
+                {
+                    contattoDaModificare.Element("Email").Value = txtModificaEmail.Text;
+                    contattoDaModificare.Element("Telefono").Value = txtModificaTelefono.Text;
+                    doc.Save(xmlFilePath);
+                    MessageBox.Show("Contatto modificato con successo!");
+                    CaricaContatti();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Errore durante il salvataggio: " + ex.Message);
+            }
         }
 
         private void CaricaDatiContattoSelezionato(dynamic contatto)
@@ -176,6 +211,8 @@ namespace Esercizio03___Rubrica
             txtModificaEmail.Text = contatto.Email;
             txtModificaTelefono.Text = contatto.Telefono;
         }
+
+        
 
         private void eliminaContattoToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -247,15 +284,6 @@ namespace Esercizio03___Rubrica
                 groupBoxRicerca.Controls.Add(btnRicerca);
 
                 this.Controls.Add(groupBoxRicerca);
-
-                Timer timer = new Timer();
-                timer.Interval = 3000;
-                timer.Tick += (s, ev) =>
-                {
-                    this.Controls.Remove(groupBoxRicerca);
-                    timer.Stop();
-                };
-                timer.Start();
             }
         }
 
@@ -277,15 +305,28 @@ namespace Esercizio03___Rubrica
                 {
                     string messaggio = $"Contatto trovato:\n\nNome: {contattoDaCercare.Element("Nome")?.Value}\nCognome: {contattoDaCercare.Element("Cognome")?.Value}\nEmail: {contattoDaCercare.Element("Email")?.Value}\nTelefono: {contattoDaCercare.Element("Telefono")?.Value}";
                     MessageBox.Show(messaggio);
+
+                    // Timer per chiudere il GroupBox dopo la chiusura della MessageBox
+                    Timer timer = new Timer();
+                    timer.Interval = 3000;
+                    timer.Tick += (s, ev) =>
+                    {
+                        this.Controls.Remove(groupBoxRicerca);
+                        timer.Stop();
+                    };
+                    timer.Start();
                 }
                 else
+                {
                     MessageBox.Show("Contatto non trovato.");
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Errore durante la ricerca: " + ex.Message);
             }
         }
+
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
@@ -340,33 +381,6 @@ namespace Esercizio03___Rubrica
             }
         }
 
-        private void SalvaModificheContatto(object sender, EventArgs e)
-        {
-            string xmlFilePath = GetXmlFilePath();
-
-            try
-            {
-                XDocument doc = XDocument.Load(xmlFilePath);
-
-                var contattoDaModificare = doc.Descendants("Contatto")
-                    .Where(x => x.Element("Email")?.Value == txtModificaEmail.Text)
-                    .FirstOrDefault();
-
-                if (contattoDaModificare != null)
-                {
-                    contattoDaModificare.Element("Email").Value = txtModificaEmail.Text;
-                    contattoDaModificare.Element("Telefono").Value = txtModificaTelefono.Text;
-                    doc.Save(xmlFilePath);
-                    MessageBox.Show("Contatto modificato con successo!");
-                    CaricaContatti();
-                }
-                else
-                    MessageBox.Show("Contatto non trovato.");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Errore durante il salvataggio: " + ex.Message);
-            }
-        }
+        
     }
 }
