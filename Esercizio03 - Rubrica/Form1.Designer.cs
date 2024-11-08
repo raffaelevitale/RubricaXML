@@ -48,6 +48,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.listBoxContatti = new System.Windows.Forms.ListBox();
+            this.abbonamentoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.grbContatto.SuspendLayout();
             this.SuspendLayout();
@@ -58,6 +59,7 @@
             this.modificaContattoToolStripMenuItem,
             this.eliminaContattoToolStripMenuItem,
             this.ricercaContattoToolStripMenuItem,
+            this.abbonamentoToolStripMenuItem,
             this.toolStripMenuItem1,
             this.esciToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -219,6 +221,13 @@
             this.listBoxContatti.Size = new System.Drawing.Size(326, 212);
             this.listBoxContatti.TabIndex = 2;
             // 
+            // abbonamentoToolStripMenuItem
+            // 
+            this.abbonamentoToolStripMenuItem.Name = "abbonamentoToolStripMenuItem";
+            this.abbonamentoToolStripMenuItem.Size = new System.Drawing.Size(96, 20);
+            this.abbonamentoToolStripMenuItem.Text = "Abbonamento";
+            this.abbonamentoToolStripMenuItem.Click += new System.EventHandler(this.abbonamentoToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -229,6 +238,8 @@
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
+            this.MaximumSize = new System.Drawing.Size(642, 455);
+            this.MinimumSize = new System.Drawing.Size(642, 455);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Rubrica";
@@ -262,6 +273,7 @@
         private System.Windows.Forms.Button btnCreaContatto;
         private System.Windows.Forms.ListBox listBoxContatti;
         private System.Windows.Forms.ToolStripMenuItem ricercaContattoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem abbonamentoToolStripMenuItem;
     }
 }
 

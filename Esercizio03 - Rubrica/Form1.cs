@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -10,9 +11,6 @@ namespace Esercizio03___Rubrica
     {
         private string GetXmlFilePath()
         {
-            // Se desideri impostare un percorso fisso puoi scriverlo qui, ad esempio: 
-            // return "C:\\Rubrica\\contatti.xml";
-            // Altrimenti si può usare un percorso dinamico come la directory corrente:
             return Path.Combine(Application.StartupPath, "contatti.xml");
         }
 
@@ -28,16 +26,13 @@ namespace Esercizio03___Rubrica
             {
                 string xmlFilePath = GetXmlFilePath();
 
-                // Controlla se il file esiste, altrimenti crea un nuovo file XML vuoto
                 if (!File.Exists(xmlFilePath))
                 {
-                    // Se non esiste, crea un file vuoto con la radice "Contatti"
                     XDocument nuovoDoc = new XDocument(new XElement("Contatti"));
                     MessageBox.Show("File creato con successo");
                     nuovoDoc.Save(xmlFilePath);
                 }
 
-                // Carica i contatti esistenti dal file XML
                 XDocument doc = XDocument.Load(xmlFilePath);
                 var contatti = doc.Descendants("Contatto")
                 .Select(x => new
@@ -49,8 +44,8 @@ namespace Esercizio03___Rubrica
 
                 // Popola la ListBox con i contatti
                 listBoxContatti.DataSource = contatti;
-                listBoxContatti.DisplayMember = "NomeCompleto";  // Mostra Nome e Cognome
-                listBoxContatti.ValueMember = "Email";  // Mantiene l'email come valore selezionato
+                listBoxContatti.DisplayMember = "NomeCompleto";
+                listBoxContatti.ValueMember = "Email";
             }
             catch (Exception ex)
             {
@@ -82,21 +77,18 @@ namespace Esercizio03___Rubrica
             {
                 string xmlFilePath = GetXmlFilePath();
 
-                // Controlla che l'email sia valida
                 if (!emailValida(txtEmail.Text))
                 {
                     MessageBox.Show("Inserisci una email valida!");
                     return;
                 }
 
-                // Se il file non esiste, lo crea (verifica extra)
                 if (!File.Exists(xmlFilePath))
                 {
                     XDocument nuovoDoc = new XDocument(new XElement("Contatti"));
                     nuovoDoc.Save(xmlFilePath);
                 }
 
-                // Crea un nuovo elemento "Contatto" con i dati delle TextBox
                 XElement nuovoContatto = new XElement("Contatto",
                     new XElement("Cognome", txtCognome.Text),
                     new XElement("Nome", txtNome.Text),
@@ -104,26 +96,17 @@ namespace Esercizio03___Rubrica
                     new XElement("Email", txtEmail.Text),
                     new XElement("Telefono", txtTelefono.Text));
 
-                // Carica il documento XML esistente
                 XDocument doc = XDocument.Load(xmlFilePath);
-
-                // Aggiunge il nuovo contatto al nodo "Contatti"
                 doc.Element("Contatti").Add(nuovoContatto);
-
-                // Salva il file XML con il nuovo contatto
                 doc.Save(xmlFilePath);
-
                 MessageBox.Show("Contatto aggiunto e file salvato correttamente!");
-
-                // Ricarica i contatti per aggiornare la visualizzazione
                 CaricaContatti();
 
-                // Svuota i campi dopo aver aggiunto un contatto
-                txtCognome.Text = "";
-                txtNome.Text = "";
-                txtIndirizzo.Text = "";
-                txtEmail.Text = "";
-                txtTelefono.Text = "";
+                txtCognome.Text = string.Empty;
+                txtNome.Text = string.Empty;
+                txtIndirizzo.Text = string.Empty;
+                txtEmail.Text = string.Empty;
+                txtTelefono.Text = string.Empty;
             }
             catch (Exception ex)
             {
@@ -135,27 +118,19 @@ namespace Esercizio03___Rubrica
         {
             var selectedContact = (dynamic)listBoxContatti.SelectedItem;
             if (selectedContact != null)
-            {
-                // Carica i dati del contatto selezionato nei campi dinamici (che creeremo sotto)
                 CaricaDatiContattoSelezionato(selectedContact);
-            }
         }
 
         private TextBox txtModificaEmail, txtModificaTelefono;
 
         private void modificaContattoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Verifica se ci sono altre GroupBox nella stessa posizione
             var existingGroupBox = this.Controls.OfType<GroupBox>()
                 .FirstOrDefault(gb => gb.Left == 12 && gb.Top == 250);
 
             if (existingGroupBox != null)
-            {
-                // Sposta la GroupBox a destra
                 existingGroupBox.Left += existingGroupBox.Width + 80;
-            }
 
-            // Crea il GroupBox per la modifica del contatto
             GroupBox groupBoxModifica = new GroupBox
             {
                 Text = "Modifica Contatto",
@@ -165,45 +140,45 @@ namespace Esercizio03___Rubrica
                 Height = 150
             };
 
-            // Crea le label e le TextBox per Email e Telefono
             Label lblEmail = new Label { Text = "Email", Left = 10, Top = 20, AutoSize = true };
             txtModificaEmail = new TextBox { Left = 100, Top = 20, Width = 200 };
 
             Label lblTelefono = new Label { Text = "Telefono", Left = 10, Top = 60, AutoSize = true };
             txtModificaTelefono = new TextBox { Left = 100, Top = 60, Width = 200 };
 
-            // Aggiungi un pulsante di conferma per salvare le modifiche
             Button btnSalvaModifiche = new Button { Text = "Salva", Left = 100, Top = 100, Width = 100 };
             btnSalvaModifiche.Click += new EventHandler(SalvaModificheContatto);
 
-            // Aggiungi i controlli al GroupBox
             groupBoxModifica.Controls.Add(lblEmail);
             groupBoxModifica.Controls.Add(txtModificaEmail);
             groupBoxModifica.Controls.Add(lblTelefono);
             groupBoxModifica.Controls.Add(txtModificaTelefono);
             groupBoxModifica.Controls.Add(btnSalvaModifiche);
 
-            // Aggiungi il GroupBox al form
             this.Controls.Add(groupBoxModifica);
 
-            // Carica i dati del contatto selezionato
             var selectedContact = (dynamic)listBoxContatti.SelectedItem;
             if (selectedContact != null)
-            {
                 CaricaDatiContattoSelezionato(selectedContact);
-            }
+
+            Timer timer = new Timer();
+            timer.Interval = 3000;
+            timer.Tick += (s, ev) =>
+            {
+                this.Controls.Remove(groupBoxModifica);
+                timer.Stop();
+            };
+            timer.Start();
         }
 
         private void CaricaDatiContattoSelezionato(dynamic contatto)
         {
-            // Assegna i valori alle TextBox create dinamicamente
             txtModificaEmail.Text = contatto.Email;
             txtModificaTelefono.Text = contatto.Telefono;
         }
 
         private void eliminaContattoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Verifica se è stato selezionato un contatto nella ListBox
             var contattoSelezionato = (dynamic)listBoxContatti.SelectedItem;
             if (contattoSelezionato == null)
             {
@@ -211,39 +186,32 @@ namespace Esercizio03___Rubrica
                 return;
             }
 
-            // Mostra un messaggio di conferma con nome completo
             string messaggio = $"Sei sicuro di voler eliminare il contatto?\n\nNome Completo: {contattoSelezionato.NomeCompleto}";
             DialogResult risultato = MessageBox.Show(messaggio, "Conferma Eliminazione", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-            // Se l'utente conferma, procedi con l'eliminazione
             if (risultato == DialogResult.Yes)
             {
-                string xmlFilePath = GetXmlFilePath(); // Assicurati di avere un metodo per ottenere il percorso del file XML
+                string xmlFilePath = GetXmlFilePath();
 
                 try
                 {
                     XDocument doc = XDocument.Load(xmlFilePath);
 
-                    // Trova il contatto da eliminare
                     var contattoDaEliminare = doc.Descendants("Contatto")
                         .Where(x => x.Element("Email")?.Value == contattoSelezionato.Email)
                         .FirstOrDefault();
 
                     if (contattoDaEliminare != null)
                     {
-                        // Rimuove il contatto dal documento XML
                         contattoDaEliminare.Remove();
                         doc.Save(xmlFilePath);
 
                         MessageBox.Show("Contatto eliminato con successo!");
 
-                        // Ricarica i contatti per aggiornare la visualizzazione
                         CaricaContatti();
                     }
                     else
-                    {
                         MessageBox.Show("Contatto non trovato.");
-                    }
                 }
                 catch (Exception ex)
                 {
@@ -257,10 +225,8 @@ namespace Esercizio03___Rubrica
 
         private void ricercaContattoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Verifica se il GroupBox di ricerca esiste già
             if (groupBoxRicerca == null)
             {
-                // Crea il GroupBox per la ricerca
                 groupBoxRicerca = new GroupBox
                 {
                     Text = "Ricerca Contatto",
@@ -270,21 +236,26 @@ namespace Esercizio03___Rubrica
                     Height = 150
                 };
 
-                // Crea le label e le TextBox per la ricerca
                 Label lblRicerca = new Label { Text = "Ricerca", Left = 10, Top = 20, AutoSize = true };
                 txtRicerca = new TextBox { Left = 100, Top = 20, Width = 120 };
 
-                // Aggiungi un pulsante di conferma per avviare la ricerca
                 Button btnRicerca = new Button { Text = "Cerca", Left = 100, Top = 100, Width = 100 };
                 btnRicerca.Click += new EventHandler(CercaContatto);
 
-                // Aggiungi i controlli al GroupBox
                 groupBoxRicerca.Controls.Add(lblRicerca);
                 groupBoxRicerca.Controls.Add(txtRicerca);
                 groupBoxRicerca.Controls.Add(btnRicerca);
 
-                // Aggiungi il GroupBox al form
                 this.Controls.Add(groupBoxRicerca);
+
+                Timer timer = new Timer();
+                timer.Interval = 3000;
+                timer.Tick += (s, ev) =>
+                {
+                    this.Controls.Remove(groupBoxRicerca);
+                    timer.Stop();
+                };
+                timer.Start();
             }
         }
 
@@ -296,7 +267,6 @@ namespace Esercizio03___Rubrica
             {
                 XDocument doc = XDocument.Load(xmlFilePath);
 
-                // Trova il contatto da cercare tramite il nome, cognome o telefono
                 var contattoDaCercare = doc.Descendants("Contatto")
                     .Where(x => x.Element("Nome")?.Value == txtRicerca.Text ||
                                 x.Element("Cognome")?.Value == txtRicerca.Text ||
@@ -305,14 +275,11 @@ namespace Esercizio03___Rubrica
 
                 if (contattoDaCercare != null)
                 {
-                    // Mostra i dettagli del contatto trovato
                     string messaggio = $"Contatto trovato:\n\nNome: {contattoDaCercare.Element("Nome")?.Value}\nCognome: {contattoDaCercare.Element("Cognome")?.Value}\nEmail: {contattoDaCercare.Element("Email")?.Value}\nTelefono: {contattoDaCercare.Element("Telefono")?.Value}";
                     MessageBox.Show(messaggio);
                 }
                 else
-                {
                     MessageBox.Show("Contatto non trovato.");
-                }
             }
             catch (Exception ex)
             {
@@ -322,8 +289,55 @@ namespace Esercizio03___Rubrica
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            // Apre una nuova finestra dove sono indicate le istruzioni per l'uso del programma
-            MessageBox.Show("Benvenuto nella rubrica!\n\nPer aggiungere un contatto, compila tutti i campi e clicca su 'Aggiungi Contatto'.\n\nPer modificare un contatto, selezionalo dalla lista e clicca su 'Modifica Contatto'.\n\nPer eliminare un contatto, selezionalo dalla lista e clicca su 'Elimina Contatto'.\n\nPer cercare un contatto, clicca su 'Cerca Contatto' e inserisci il nome o l'email del contatto da cercare.\n\nBuon utilizzo!", "Istruzioni");
+            MessageBox.Show("Benvenuto nella rubrica!\n\n" +
+                "Per aggiungere un contatto, compila tutti i campi e clicca su 'Aggiungi Contatto'.\n\n" +
+                "Per modificare un contatto, selezionalo dalla lista e clicca su 'Modifica Contatto'.\n\n" +
+                "Per eliminare un contatto, selezionalo dalla lista e clicca su 'Elimina Contatto'.\n\n" +
+                "Per cercare un contatto, clicca su 'Cerca Contatto' e inserisci il nome o l'email del contatto da cercare.\n\n" +
+                "Per inserire un'immagine per il contatto, premere su Abbonamento.\n\n" +
+                "Buon utilizzo!",
+                "Istruzioni");
+        }
+
+        private void abbonamentoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var contattoSelezionato = (dynamic)listBoxContatti.SelectedItem;
+            if (contattoSelezionato == null)
+            {
+                MessageBox.Show("Seleziona un contatto a cui inviare l'abbonamento.");
+                return;
+            }
+
+            string messaggio = $"Vuoi inviare l'abbonamento a {contattoSelezionato.NomeCompleto}?";
+            DialogResult risultato = MessageBox.Show(messaggio, "Conferma Abbonamento", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (risultato == DialogResult.Yes)
+                MessageBox.Show("Abbonamento inviato con successo!");
+
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Title = "Seleziona un'immagine",
+                Filter = "File immagine|*.jpg;*.jpeg;*.png;*.gif"
+            };
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string imagePath = openFileDialog.FileName;
+                MessageBox.Show("Immagine salvata con successo!");
+
+                PictureBox pictureBox = new PictureBox
+                {
+                    Name = "pictureBox",
+                    Size = new Size(150, 150),
+                    Location = new Point(13, 250),
+                    SizeMode = PictureBoxSizeMode.StretchImage,
+                    Image = Image.FromFile(imagePath)
+                };
+
+                this.Controls.Add(pictureBox);
+
+                MessageBox.Show("Immagine salvata e visualizzata con successo!");
+            }
         }
 
         private void SalvaModificheContatto(object sender, EventArgs e)
@@ -334,29 +348,20 @@ namespace Esercizio03___Rubrica
             {
                 XDocument doc = XDocument.Load(xmlFilePath);
 
-                // Trova il contatto da modificare tramite l'email originale o altro identificatore univoco
                 var contattoDaModificare = doc.Descendants("Contatto")
                     .Where(x => x.Element("Email")?.Value == txtModificaEmail.Text)
                     .FirstOrDefault();
 
                 if (contattoDaModificare != null)
                 {
-                    // Aggiorna solo i valori dell'email e del telefono
                     contattoDaModificare.Element("Email").Value = txtModificaEmail.Text;
                     contattoDaModificare.Element("Telefono").Value = txtModificaTelefono.Text;
-
-                    // Salva il documento XML aggiornato
                     doc.Save(xmlFilePath);
-
                     MessageBox.Show("Contatto modificato con successo!");
-
-                    // Ricarica i contatti per aggiornare la visualizzazione
                     CaricaContatti();
                 }
                 else
-                {
                     MessageBox.Show("Contatto non trovato.");
-                }
             }
             catch (Exception ex)
             {
